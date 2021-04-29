@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm , CommentForm
 
 
 class PostListView(View):
@@ -19,9 +19,22 @@ class PostListView(View):
             new_post=form.save(commit=False)
             new_post.author=request.user
             new_post.save()
-            context={'post_list':posts,'form':form}
-            return render (request,'social/post_list.html',context)
+        context={'post_list':posts,'form':form}
+        return render (request,'social/post_list.html',context)
 
+
+
+class PostDetailView(View):
+    def get(self,request,pk,*args,**kwargs):
+        post=Post.objects.get(pk=pk)
+        form=CommentForm()
+        context={
+            'post':post,
+            'form':form,
+
+        }
+
+        return render(request,'social/post_detail.html',context)    
 
 
 
