@@ -19,17 +19,18 @@
             
         </div>
     </div>
-      {% for post in post_list %}
-      <div class="row justify-content-center mt-3">
-          <div class="col-md-5 col-sm-12 border-bottom position-relative">
-              <p><strong>{{post.author}} </strong> {{post.created_on}}</p>
-              <p>{{post.body}}</p>
-              <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
-          </div>
-      </div>
-      {% endfor %}
-  </div>
+    {% for post in post_list %}
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom position-relative">   
+            <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.pk %}">@{{ post.author }}</a> {{ post.created_on }}</p>
+            <div class="position-relative">
+                <p>{{ post.body }}</p>
+                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 
-
-
-{% endblock content%}
+    
+</div>
+{% endblock content %}
