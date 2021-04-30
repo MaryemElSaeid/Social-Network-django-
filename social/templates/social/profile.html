@@ -73,7 +73,16 @@
     {% for post in posts %}
     <div class="row justify-content-center mt-5">
         <div class="col-md-8 col-sm-12 border-bottom">
-            <p><a style="text-decoration: none" class="text-primary" href="{% url 'profile' post.author.profile.pk %}">@{{ post.author }}</a> {{ post.created_on }}</p>
+            <div>
+                <a href="{% url 'profile' post.author.pk %}">
+                    <img class="rounded-circle post-img" height="30" width="30" src="{{ post.author.profile.picture.url }}" />
+                </a>
+                <p class="post-text">
+                    <a class="text-primary post-link" href="{% url 'profile' post.author.pk %}">@{{ post.author }}</a> 
+                    <br>
+                    {{ post.created_on }}
+                </p>
+            </div>
             <div class="position-relative">
                 <p>{{ post.body }}</p>
                 <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
