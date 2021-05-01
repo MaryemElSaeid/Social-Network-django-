@@ -8,6 +8,7 @@ from .models import Post, Comment, UserProfile
 from .forms import PostForm, CommentForm
 from django.views.generic.edit import UpdateView, DeleteView
 
+
 class PostListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         logged_in_user = request.user
@@ -22,7 +23,6 @@ class PostListView(LoginRequiredMixin, View):
         }
 
         return render(request, 'social/post_list.html', context)
-
 
     def post(self, request, *args, **kwargs):
         posts = Post.objects.all().order_by('-created_on')
@@ -109,7 +109,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == post.author
 
 class ProfileView(View):
-    def get(self, request, pk, **kwargs):
+    def get(self, request, pk, *args, **kwargs):
         profile = UserProfile.objects.get(pk=pk)
         user = profile.user
         posts = Post.objects.filter(author=user).order_by('-created_on')
@@ -132,7 +132,6 @@ class ProfileView(View):
             'user': user,
             'profile': profile,
             'posts': posts,
-            'followers': followers,
             'number_of_followers': number_of_followers,
             'is_following': is_following,
         }
@@ -165,7 +164,6 @@ class RemoveFollower(LoginRequiredMixin, View):
         profile.followers.remove(request.user)
 
         return redirect('profile', pk=profile.pk)
-
 
 class AddLike(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
@@ -227,7 +225,6 @@ class AddDislike(LoginRequiredMixin, View):
         next = request.POST.get('next', '/')
         return HttpResponseRedirect(next)
 
-
 class UserSearch(View):
     def get(self, request, *args, **kwargs):
         query = self.request.GET.get('query')
@@ -242,4 +239,14 @@ class UserSearch(View):
         return render(request, 'social/search.html', context)
 
 
-        
+class ListFollowers(View):
+    def get(self, request, pk, *args, **kwargs):
+        profile = UserProfile.objects.get(pk=pk)
+        followers = profile.followers.all()
+
+        context = {
+            'profile': profile,
+            'followers': followers,
+        }
+
+        return render(request, 'social/followers_list.html', context)
