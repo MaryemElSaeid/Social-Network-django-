@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.views import View
-from .models import Post, Comment, UserProfile
-from .forms import PostForm, CommentForm
+from .models import Post, Comment, UserProfile,Notification,ThreadModel,MessageModel
+from .forms import PostForm, CommentForm ,ThreadForm ,MessageForm
 from django.views.generic.edit import UpdateView, DeleteView
+from django.contrib.auth.models import User 
+from django.shortcuts import redirect
 
 
 class PostListView(LoginRequiredMixin, View):
@@ -29,7 +31,7 @@ class PostListView(LoginRequiredMixin, View):
         posts = Post.objects.filter(
             author__profile__followers__in=[logged_in_user.id]
         ).order_by('-created_on')
-        form = PostForm(request.POST)
+        form = PostForm(request.POST,request.FILES)
 
         if form.is_valid():
             new_post = form.save(commit=False)
@@ -68,7 +70,7 @@ class PostDetailView(LoginRequiredMixin, View):
             new_comment.save()
 
         comments = Comment.objects.filter(post=post).order_by('-created_on')
-
+        notification=Notification.objects.create(notification_type = 2,from_user=request.user,to_user=post.author,post=post)
         context = {
             'post': post,
             'form': form,
@@ -89,6 +91,8 @@ class CommentReplyView(LoginRequiredMixin, View):
             new_comment.post = post
             new_comment.parent = parent_comment
             new_comment.save()
+
+        notification=Notification.objects.create(notification_type = 2,from_user=request.user,to_user=parent_comment.author,comment=new_comment)
 
         return redirect('post-detail', pk=post_pk)
 
@@ -173,6 +177,8 @@ class AddFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         profile = UserProfile.objects.get(pk=pk)
         profile.followers.add(request.user)
+        notification=Notification.objects.create(notification_type = 3,from_user=request.user,to_user=profile.user)
+
 
         return redirect('profile', pk=profile.pk)
 
@@ -206,6 +212,8 @@ class AddLike(LoginRequiredMixin, View):
 
         if not is_like:
             post.likes.add(request.user)
+            notification=Notification.objects.create(notification_type = 1 ,from_user=request.user,to_user=post.author,post=post)
+
 
         if is_like:
             post.likes.remove(request.user)
@@ -266,6 +274,8 @@ class AddCommentLike(LoginRequiredMixin, View):
 
         if not is_like:
             comment.likes.add(request.user)
+            notification=Notification.objects.create(notification_type = 1,from_user=request.user,to_user=comment.author,comment=comment)
+
 
         if is_like:
             comment.likes.remove(request.user)
@@ -328,3 +338,109 @@ class ListFollowers(View):
         }
 
         return render(request, 'social/followers_list.html', context)
+
+
+class PostNotification(View):
+    def get(self, request,notification_pk,post_pk, *args, **kwargs):
+        notification=Notification.objects.get(pk=notification_pk)
+        post=Post.objects.get(pk=post_pk)
+        notification.user_has_seen=True 
+        notification.save()
+        return redirect('post-detail',pk=post_pk)
+
+class FollowNotification(View):
+    def get(self, request, notification_pk, profile_pk, *args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+        profile = UserProfile.objects.get(pk=profile_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+
+        return redirect('profile', pk=profile_pk)
+
+class RemoveNotification(View):
+    def delete(self, request, notification_pk, *args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+        notification.user_has_seen = True
+        notification.save()
+        return HttpResponse('Success', content_type='text/plain')        
+
+
+class ListThreads(View):
+    def get(self, request, *args, **kwargs):
+        threads = ThreadModel.objects.filter(Q(user=request.user) | Q(receiver=request.user))
+
+        context = {
+            'threads': threads
+        }
+
+        return render(request, 'social/inbox.html', context)
+
+
+class CreateThread(View):
+    def get(self, request, *args, **kwargs):
+        form = ThreadForm()
+
+        context = {
+            'form': form
+        }
+
+        return render(request, 'social/create_thread.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = ThreadForm(request.POST)
+
+        username = request.POST.get('username')
+
+        try:
+            receiver = User.objects.get(username=username)
+            if ThreadModel.objects.filter(user=request.user, receiver=receiver).exists():
+                thread = ThreadModel.objects.filter(user=request.user, receiver=receiver)[0]
+                return redirect('thread', pk=thread.pk)
+            elif ThreadModel.objects.filter(user=receiver, receiver=request.user).exists():
+                thread = ThreadModel.objects.filter(user=receiver, receiver=request.user)[0]
+                return redirect('thread', pk=thread.pk)
+
+            if form.is_valid():
+                thread = ThreadModel(
+                    user=request.user,
+                    receiver=receiver
+                )
+                thread.save()
+
+                return redirect('thread', pk=thread.pk)
+        except:
+            return redirect('create-thread')
+
+class ThreadView(View):
+    def get(self, request, pk, *args, **kwargs):
+        form = MessageForm()
+        thread = ThreadModel.objects.get(pk=pk)
+        message_list = MessageModel.objects.filter(thread__pk__contains=pk)
+        context = {
+            'thread': thread,
+            'form': form,
+            'message_list': message_list
+        }
+
+        return render(request, 'social/thread.html', context)
+
+class CreateMessage(View):
+    def post(self, request, pk, *args, **kwargs):
+        thread = ThreadModel.objects.get(pk=pk)
+        if thread.receiver == request.user:
+            receiver = thread.user
+        else:
+            receiver = thread.receiver
+
+        message = MessageModel(
+            thread=thread,
+            sender_user=request.user,
+            receiver_user=receiver,
+            body=request.POST.get('message')
+        )
+
+        message.save()
+        return redirect('thread', pk=pk)
+
+

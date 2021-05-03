@@ -7,6 +7,7 @@ from django.dispatch import receiver
 
 class Post(models.Model):
     body = models.TextField()
+    image = models.ImageField(upload_to='uploads/post_photos',blank=True,null=True)
     created_on = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, blank=True, related_name='likes')
@@ -49,3 +50,26 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
 	instance.profile.save()
+
+class Notification(models.Model):	
+	notification_type=models.IntegerField()
+	to_user=models.ForeignKey(User,related_name="notification_to", on_delete=models.CASCADE,null=True)
+	from_user=models.ForeignKey(User,related_name="notification_from", on_delete=models.CASCADE,null=True)
+	post=models.ForeignKey(Post,related_name="+", on_delete=models.CASCADE,null=True,blank=True)
+	comment=models.ForeignKey(Comment,related_name="+", on_delete=models.CASCADE,null=True,blank=True)
+	date=models.DateTimeField(default=timezone.now)
+	user_has_seen=models.BooleanField(default=False)
+
+class ThreadModel(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+	receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+
+class MessageModel(models.Model):
+	thread = models.ForeignKey('ThreadModel', related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+	sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+	receiver_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+	body = models.CharField(max_length=1000)
+	image = models.ImageField(upload_to='uploads/message_photos', blank=True, null=True)
+	date = models.DateTimeField(default=timezone.now)
+	is_read = models.BooleanField(default=False)		
+
