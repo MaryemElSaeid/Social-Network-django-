@@ -1,4 +1,5 @@
 {% load custom_tags %}
+{% load  static  %}
 <div class="container">
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
@@ -17,7 +18,7 @@
 
         </ul>
 
-        <form class="d-flex" method="GET" action="{% url 'profile-search' %}" style="margin-left: 70%;">
+        <form class="d-flex" method="GET" action="{% url 'profile-search' %}" style="margin-left: 40%;">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">@</span>
             <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="query" value="{{ request.GET.query }}">
@@ -27,9 +28,10 @@
         
           {% if user.is_authenticated %}
           
-            <div class="dropdown show">
+            <div class="dropdown show ">
               <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:black;">
-                <i class="fas fa-user"></i>
+                {% comment %} <i class="fas fa-user"></i> {% endcomment %}
+                <i class="far fa-user"></i>
               </a>
                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <a class="dropdown-item" href="{% url 'profile' request.user.profile.pk %}">My Profile</a>
@@ -37,7 +39,7 @@
               </div>
               </div>
               <div class="nav-item inbox-item-container">
-              <a href="{% url 'inbox' %}" class="inbox-icon"><i class="far fa-paper-plane "></i></a>
+              <a href="{% url 'inbox' %}" class="inbox-icon"><i class="far fa-comment-alt mx-2" style="font-size:20px"></i></a>
               </div>
              <div class="nav-item">
              {%  show_notifications %}

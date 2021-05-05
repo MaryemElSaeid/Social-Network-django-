@@ -60,6 +60,9 @@ class Notification(models.Model):
 	date=models.DateTimeField(default=timezone.now)
 	user_has_seen=models.BooleanField(default=False)
 
+
+	
+
 class ThreadModel(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
 	receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
