@@ -15,12 +15,12 @@ Change working directory to /Social-Network-django
  source env/bin/activate
  
 3) Install requirements
- pip install django 
- pip intsall Pillow 
- pip install django_crispy_forms 
- pip install django_allauth 
- pip install misaka 
- pip install django-braces 
+ - pip install django 
+ - pip intsall Pillow 
+ - pip install django_crispy_forms 
+ - pip install django_allauth 
+ - pip install misaka 
+ - pip install django-braces 
  
 4) Run migrations :
  python manage.py makemigrations
