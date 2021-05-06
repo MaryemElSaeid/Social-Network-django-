@@ -1,0 +1,36 @@
+{% extends "groups/group_base.html"%}
+
+{% load crispy_forms_tags %}
+{% block group_content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'post-list' %}" class="btn btn-light">Back to Feed</a>
+        </div>
+    </div>
+    <br>
+    <div class="row mt-5">
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'groups:all' %}" class="btn btn-light">Back to Groups</a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <h5>Create Group</h5>
+        </div>
+    </div>
+
+    
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12 border-bottom">
+   
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <input type="submit" class="btn btn-large btn-success" value="Create group">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

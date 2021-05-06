@@ -1,5 +1,5 @@
 {% load custom_tags %}
-{% load  static  %}
+{% load static  %}
 <div class="container">
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
@@ -27,23 +27,39 @@
         </form>
         
           {% if user.is_authenticated %}
-          
-            <div class="dropdown show ">
-              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:black;">
-                {% comment %} <i class="fas fa-user"></i> {% endcomment %}
-                <i class="far fa-user"></i>
-              </a>
-               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <div class="dropdown show ">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false" style="background-color:black;">
+              <i class="fa fa-users" aria-hidden="true"></i>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item" href="{% url 'groups:all' %}">All Groups</a>
+              <a class="dropdown-item" href="{% url 'groups:create' %}">Create Group</a>
+              <a class="dropdown-item" href="{% url 'posts:create' %}">Create Post In Group</a>
+            </div>
+          </div>
+          &nbsp;
+          <div class="dropdown show ">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false" style="background-color:black;">
+              {% comment %} <i class="fas fa-user"></i> {% endcomment %}
+              <i class="far fa-user"></i>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <a class="dropdown-item" href="{% url 'profile' request.user.profile.pk %}">My Profile</a>
               <a class="dropdown-item" href="{% url 'account_logout' %}">Signout</a>
-              </div>
-              </div>
-              <div class="nav-item inbox-item-container">
-              <a href="{% url 'inbox' %}" class="inbox-icon"><i class="far fa-comment-alt mx-2" style="font-size:20px"></i></a>
-              </div>
+            </div>
+          </div>
+          &nbsp;
+          <div class="nav-item inbox-item-container">
+            <a href="{% url 'inbox' %}" class="inbox-icon"><i class="far fa-comment-alt mx-2" style="font-size:20px"></i></a>
+          </div>
+          &nbsp;
              <div class="nav-item">
              {%  show_notifications %}
             </div>  
+
+
           {% endif %}
       </div>
     </div>

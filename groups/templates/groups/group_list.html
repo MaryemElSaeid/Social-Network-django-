@@ -1,0 +1,39 @@
+{% extends "groups/group_base.html"%} 
+
+{% block pregroup %}
+
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'post-list' %}" class="btn btn-light">Back to Feed</a>
+        </div>
+    </div>
+	<div class="row">
+		<div class="col-md-12 p-5">
+			<h3>Groups</h3>
+		</div>
+	</div>
+
+	<div class="row">
+        {% if user.is_authenticated%}
+		<div class="col-md-12 p-5">
+            <a href="{% url 'groups:create' %}" class="btn btn-light p-3"><span class="fa fa-plus" aria-hidden="true"></span>&nbsp;Create new group</a>
+		</div>
+        {% endif %}
+	</div>
+{% endblock %}
+
+{% block group_content %}
+{% for group in object_list %}
+	<div class="row mb-3">
+		<div class="card col-md-12 p-5 shadow-sm">
+            <a href="{% url 'groups:single' slug=group.slug%}">
+                <h5 style="color: black;"> {{group.name}} </h5>
+            </a>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+{% endblock %}

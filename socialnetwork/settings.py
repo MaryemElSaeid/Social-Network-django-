@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'social',
+    'groups',
+    'posts',
     'landing',
     'crispy_forms',
     'allauth',
