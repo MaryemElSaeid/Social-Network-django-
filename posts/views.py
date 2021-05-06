@@ -6,7 +6,6 @@ from braces.views import SelectRelatedMixin
 from django.http import Http404
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-
 # Create your views here.
 
 
@@ -127,4 +126,3 @@ class DeleteComment(LoginRequiredMixin,DeleteView):
         username = post.user.username
         pk = post.pk
         return reverse_lazy('posts:single',kwargs={'username':username,'pk':pk})
-

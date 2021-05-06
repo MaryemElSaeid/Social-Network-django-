@@ -2,6 +2,8 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
+ 
+
 {% block content %}
 <div class="container">
     <div class="row mt-5">
@@ -9,6 +11,8 @@
             <a href="{% url 'post-list' %}" class="btn btn-light">Back To Feed</a>
         </div>
     </div>
+
+ 
 
     <div class="row justify-content-center mt-3">
         <div class="col-md-5 col-sm-12 border-bottom">
@@ -24,7 +28,12 @@
                     <a href="{% url 'post-edit' post.pk %}" class="edit-color"><i class="far fa-edit"></i></a>
                     <a href="{% url 'post-delete' post.pk %}" class="edit-color"><i class="fas fa-trash"></i></a>
                 {% endif %}
+                {% if post.image%}
+                <img src="{{post.image.url}} " class="post-image"/>
+                {% endif%}
             <p>{{ post.body }}</p>
+
+ 
 
             <div class="d-flex flex-row">
                 <form method="POST" action="{% url 'like' post.pk %}">
@@ -34,6 +43,8 @@
                         <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
                     </button>
                 </form>
+
+ 
 
                 <form method="POST" action="{% url 'dislike' post.pk %}">
                     {% csrf_token %}
@@ -46,13 +57,15 @@
         </div>
     </div>
 
+ 
+
     <div class="row justify-content-center mt-3 mb-5">
         <div class="col-md-5 col-sm-12">
             <form method="POST">
                 {% csrf_token %}
                 {{ form | crispy }}
                 <div class="d-grid gap-2">
-                    <button class="btn btn-success mt-3">Submit!</button>
+                    <button class="btn btn-success mt-3" style="background-color: #f7a2c9;">Submit!</button>
                 </div>
             </form>
         </div>
@@ -76,6 +89,8 @@
             </p>
             <p>{{ comment.comment }}</p>
 
+ 
+
             <div class="d-flex flex-row">
                 <form method="POST" action="{% url 'comment-like' post.pk comment.pk %}">
                     {% csrf_token %}
@@ -85,6 +100,8 @@
                     </button>
                 </form>
 
+ 
+
                 <form method="POST" action="{% url 'comment-dislike' post.pk comment.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.path }}">
@@ -93,7 +110,7 @@
                     </button>
                 </form>
                 <div>
-                    <button class="remove-default-btn"><i class="far fa-comment-dots" onclick="commentReplyToggle('{{ comment.pk }}')"></i></button>
+                    <button class="remove-default-btn" style="background-color: #f7a2c9;"><i class="far fa-comment-dots" onclick="commentReplyToggle('{{ comment.pk }}')"></i></button>
                 </div>
         </div>
         </div>
@@ -104,11 +121,13 @@
                 {% csrf_token %}
                 {{ form | crispy }}
                 <div class="d-grid gap-2">
-                    <button class="btn btn-success mt-3">Submit!</button>
+                    <button class="btn btn-success mt-3"style="background-color: #f7a2c9;">Submit!</button>
                 </div>
             </form>
         </div>
     </div>
+
+ 
 
     {% for child_comment in comment.children %}
     <div class="row justify-content-center mt-3 mb-5 " id="child-comment">
@@ -133,5 +152,7 @@
     {% endif %}
     {% endfor %}
 </div>
+
+ 
 
 {% endblock content %}

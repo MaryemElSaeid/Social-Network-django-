@@ -17,7 +17,7 @@
 
     <div class="row justify-content-center mt-3">
         <div class="col-md-5 col-sm-12 border-bottom">
-            <h5>Create Group</h5>
+            <h5 >Create Group</h5>
         </div>
     </div>
 
@@ -28,7 +28,7 @@
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form | crispy }}
-                <input type="submit" class="btn btn-large btn-success" value="Create group">
+                <input type="submit" class="btn btn-large btn-success" style="background-color: #f7a2c9;" value="Create group">
             </form>
         </div>
     </div>

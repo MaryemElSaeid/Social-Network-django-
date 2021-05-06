@@ -36,7 +36,7 @@
             {% endif %}
 
             <div class="mb-3">
-                <a href="{% url 'list-followers' profile.pk %}" class="post-link">Followers: {{ number_of_followers }}</a>
+                <a href="{% url 'list-followers' profile.pk %}" class="post-link">Friends: {{ number_of_followers }}</a>
                 
             </div>
         </div>
@@ -57,12 +57,12 @@
                 {% if is_following %}
                     <form method="POST" action="{% url 'remove-follower' profile.pk %}">
                         {% csrf_token %}
-                        <button class="btn btn-outline-danger" type="submit">Unfollow</button>
+                        <button class="btn btn-outline-light" type="submit" style="background-color: #f7a2c9;">Unfriend</button>
                     </form>
                     {% else %}
                     <form method="POST" action="{% url 'add-follower' profile.pk %}">
                         {% csrf_token %}
-                        <button class="btn btn-outline-success" type="submit">Follow</button>
+                        <button class="btn btn-outline-light" style="background-color: #f7a2c9;" type="submit">Add Friend</button>
                     </form>
                 {% endif %}
             {% endif %}
@@ -92,7 +92,7 @@
                 <form method="POST" action="{% url 'like' post.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.path }}">
-                    <button class="remove-default-btn" type="submit">
+                    <button class="remove-default-btn" type="submit" >
                         <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
                     </button>
                 </form>
@@ -100,7 +100,7 @@
                 <form method="POST" action="{% url 'dislike' post.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.path }}">
-                    <button class="remove-default-btn" type="submit">
+                    <button class="remove-default-btn" type="submit" >
                         <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
                     </button>
                 </form>

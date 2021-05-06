@@ -15,7 +15,7 @@
                 {% csrf_token %}
                 {{ form | crispy }}
                 <div class="d-grid gap-2">
-                    <button class="btn btn-success mt-3 btn-block">Submit!</button>
+                    <button class="btn btn-light mt-3 btn-block" style="background-color: #f7a2c9;">Submit!</button>
                 </div>
             </form>
         </div>
@@ -56,7 +56,7 @@
                 <form method="POST" action="{% url 'dislike' post.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.path }}">
-                    <button class="remove-default-btn" type="submit">
+                    <button class="remove-default-btn" type="submit" >
                         <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
                     </button>
                 </form>

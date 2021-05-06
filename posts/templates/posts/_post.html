@@ -1,20 +1,48 @@
-<div class="post-media">
-    <h2><b>{{post.user.username}}</b></h2>
-    <br>
-        <div class="media-body">
-            <h4> <U>{{post.message_html|safe}}</U></h4>
-                {% if post.group %}
-                    <h4>  Posted in: {{post.group.name}}</h4>
-                    <br>
+{% load static %}
+
+{% block prepost %}
+<div class="container">
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom">
+                <div>                   
+                    <p class="post-text">
+                        <p class="text-primary" ><b>Created by : </b>{{post.user.username }}</p>{{ post.created_at }}
+                    </p>
+                </div>
+                {% if request.user.is_authenticated and post.user == request.user %}
+                    <a href="{% url 'posts:edit' pk=post.pk %}" class="edit-color"><i class="far fa-edit"></i></a>
+                    <a href="{% url 'posts:delete' pk=post.pk %}" class="edit-color"><i class="fas fa-trash"></i></a>
                 {% endif %}
-                {% if request.user.is_authenticated %}
-                <h5><a href="{% url 'posts:for_user' username=post.user.username %}">All Posts </a></h5>
-                <h5><a href="{% url 'posts:single' username=post.user.username pk=post.pk %}">Post details </a></h5>
-                {% endif %}
-        </div>
-        <div class="media-footer">
-            {% if request.user.is_authenticated and request.user == post.user %}
-                 <a href="{% url 'posts:delete' pk=post.pk %}" class="btn btn-lg btn-danger"> Delete Post </a>
-            {% endif %}
+            <p>{{post.message_html|safe}}</p>
+
+
         </div>
     </div>
+    {% if post.comments %}  
+        {% for comment in post.comments.all %}
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <p>
+                <div>
+                    <p class="post-text">
+                        <a= class="text-primary post-link" >@{{comment.author}}</a>
+                    </p>
+                </div>
+                {% if comment.author == request.user %}
+                <form method="POST" action="{% url 'posts:deletecomment' username=post.user.username postpk=post.pk pk=comment.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger" name="submit">Delete</button>
+                </form> 
+                {% endif %}
+                <br>
+                {% endfor %}
+                {% else %}
+                <p> No comments yet </p>
+            {% endif %}
+            <br>
+        {% endblock %}
+            </p>
+        <p>{{comment.text|safe}}</p>
+
+
+</div>
