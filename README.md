@@ -1,6 +1,6 @@
 # Social-Network-django-
 About project-
-This is a basic social network website which is in development stage built on Django's. It has features like user's profile page, posts and groups page where you can add, update and delete posts and groups. A cool add comment feature is included in the posts page and a feedback portal to reach out to the developer.
+This is a basic social network website which is in development stage built on Django's. It has features like user's profile page, posts and groups page where you can add, update and delete posts and groups.
 
 For Developers/Contributers: To Set up follow these steps -
 
