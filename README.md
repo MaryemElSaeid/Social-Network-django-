@@ -23,8 +23,8 @@ Change working directory to /Social-Network-django
  - pip install django-braces 
  
 4) Run migrations :
- python manage.py makemigrations
- python manage.py migrate
+ python3 manage.py makemigrations
+ python3 manage.py migrate
  
 5) Run server :
- python manage.py runserver 
+ python3 manage.py runserver 
