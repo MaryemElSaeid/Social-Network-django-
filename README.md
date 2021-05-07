@@ -9,10 +9,10 @@ Run on git terminal
 Change working directory to /Social-Network-django
 
 1) make virtualenv
- virtual env <env-name>
+ - virtual env <env-name>
  
 2) Activate your virtual environment
- source env/bin/activate
+ - source env/bin/activate
  
 3) Install requirements
  - pip install django 
@@ -23,8 +23,8 @@ Change working directory to /Social-Network-django
  - pip install django-braces 
  
 4) Run migrations :
- python3 manage.py makemigrations
- python3 manage.py migrate
+ - python3 manage.py makemigrations
+ - python3 manage.py migrate
  
 5) Run server :
- python3 manage.py runserver 
+ - python3 manage.py runserver 
